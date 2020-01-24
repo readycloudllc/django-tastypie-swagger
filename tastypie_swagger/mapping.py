@@ -1,7 +1,6 @@
 import datetime
-from django.core.urlresolvers import reverse
 from django.db.models.sql.constants import QUERY_TERMS
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from tastypie import fields
 
 from .utils import trailing_slash_or_none, urljoin_forced
@@ -91,7 +90,7 @@ class ResourceSwaggerMapping(object):
 #            parameter.update({'allowableValues': allowed_values})
         return parameter
 
-    def build_parameters_from_fields(self):   
+    def build_parameters_from_fields(self):
         parameters = []
         for name, field in self.schema['fields'].items():
             # Ignore readonly fields
@@ -100,7 +99,7 @@ class ResourceSwaggerMapping(object):
                     name=name,
                     dataType=field['type'],
                     required=not field['blank'],
-                    description=force_unicode(field['help_text']),
+                    description=force_text(field['help_text']),
                 ))
         return parameters
 
@@ -120,7 +119,7 @@ class ResourceSwaggerMapping(object):
             'name': "order_by",
             'dataType': "String",
             'required': False,
-            'description': unicode("Orders the result set based on the selection. Ascending order by default, prepending the '-' sign change the sorting order to descending"),
+            'description': force_text("Orders the result set based on the selection. Ascending order by default, prepending the '-' sign change the sorting order to descending"),
             'allowableValues': {
                 'valueType' : "LIST",
                 'values': values
@@ -144,7 +143,7 @@ class ResourceSwaggerMapping(object):
                     name=name,
                     dataType=type,
                     required=False,
-                    description=force_unicode(desc),
+                    description=force_text(desc),
                 ))
         if 'filtering' in self.schema and method.upper() == 'GET':
             for name, field in self.schema['filtering'].items():
@@ -183,7 +182,7 @@ class ResourceSwaggerMapping(object):
                     schema_field = self.schema['fields'][name]
                     for query in field:
                         if query == 'exact':
-                            description = force_unicode(schema_field['help_text'])
+                            description = force_text(schema_field['help_text'])
                             dataType = schema_field['type']
                             # Use a better description for related models with exact filter
                             if dataType == 'related':
@@ -204,7 +203,7 @@ class ResourceSwaggerMapping(object):
                                 name="%s%s__%s" % (prefix, name, query),
                                 dataType=schema_field['type'],
                                 required= False,
-                                description=force_unicode(schema_field['help_text']),
+                                description=force_text(schema_field['help_text']),
                             ))
 
         return parameters
@@ -232,7 +231,7 @@ class ResourceSwaggerMapping(object):
                 name=name,
                 dataType=field['type'],
                 required=field['required'],
-                description=force_unicode(field['description']),
+                description=force_text(field['description']),
             ))
 
         return parameters
@@ -354,7 +353,7 @@ class ResourceSwaggerMapping(object):
                     field.get('type'),
                     # note: 'help_text' is a Django proxy which must be wrapped
                     # in unicode *specifically* to get the actual help text.
-                    force_unicode(field.get('help_text', '')),
+                    force_text(field.get('help_text', '')),
                 )
             )
         return properties
