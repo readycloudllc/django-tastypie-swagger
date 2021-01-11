@@ -1,5 +1,5 @@
 import datetime
-from django.db.models.sql.constants import QUERY_TERMS
+# from django.db.models.sql.constants import QUERY_TERMS
 from django.utils.encoding import force_text
 from tastypie import fields
 
@@ -159,13 +159,13 @@ class ResourceSwaggerMapping(object):
                             else:
                                 # Django 1.5+.
                                 field = self.resource._meta.queryset.query.query_terms
-                        else:
-                            if hasattr(QUERY_TERMS, 'keys'):
-                                # Django 1.4 & below compatibility.
-                                field = QUERY_TERMS.keys()
-                            else:
-                                # Django 1.5+.
-                                field = QUERY_TERMS
+                        # else:
+                        #     if hasattr(QUERY_TERMS, 'keys'):
+                        #         # Django 1.4 & below compatibility.
+                        #         field = QUERY_TERMS.keys()
+                        #     else:
+                        #         # Django 1.5+.
+                        #         field = QUERY_TERMS
 
                     elif field == ALL_WITH_RELATIONS: # Show all params from related model
                         # Add a subset of filter only foreign-key compatible on the relation itself.
